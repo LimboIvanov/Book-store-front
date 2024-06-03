@@ -21,11 +21,15 @@ const ListBookComponent = () => {
         navigator('/books/add-book')
     }
 
+    function sort() {
+        navigator('/books/sort')
+    }
 
     return (
         <div className='container'>
             <h2 className='text-center'>List of Books</h2>
             <button className='btn btn-primary mb-2' onClick={addNewBook}>Add Book</button>
+            <button className='btn btn-primary mb-2' onClick={sort}>Sort</button>
             <table className='table table-striped table-bordered'>
                 <thead>
                 <tr>
@@ -42,21 +46,21 @@ const ListBookComponent = () => {
                 </tr>
                 </thead>
                 <tbody>
-                    {
-                        books.map(book =>
-                            <tr key={book.id}>
-                                <td>{book.id}</td>
-                                <td>{book.title}</td>
-                                <td>{book.author}</td>
-                                <td>{book.genre}</td>
-                                <td>{book.isbn}</td>
-                                <td>{book.price}</td>
-                                <td>{book.description}</td>
-                                <td>{book.imageUrl}</td>
-                                <td>{book.rating}</td>
-                                <td>{book.inventoryCount}</td>
-                            </tr>)
-                    }
+                {
+                    books.map(book =>
+                        <tr key={book.id}>
+                            <td>{book.id}</td>
+                            <td>{book.title}</td>
+                            <td>{book.author}</td>
+                            <td>{book.genre}</td>
+                            <td>{book.isbn}</td>
+                            <td>{book.price}</td>
+                            <td>{book.description}</td>
+                            <td>{book.imageUrl}</td>
+                            <td>{book.rating}</td>
+                            <td>{book.inventoryCount}</td>
+                        </tr>)
+                }
                 </tbody>
             </table>
         </div>
