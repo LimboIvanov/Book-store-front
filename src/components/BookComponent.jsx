@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {createBook} from "../sevices/BookService.js";
+import {createBook} from "../services/BookService.js";
 import { useNavigate } from "react-router-dom";
 
 const BookComponent = () => {
