@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from
-        'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {getBook, getReviewsByBookId} from '../services/BookService.js';
+import { getBook, getReviewsByBookId, getImage } from '../services/BookService.js';
 
 const BookDetailComponent = () => {
     const { id } = useParams();
     const [book, setBook] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         fetchBookDetails();
@@ -17,6 +17,7 @@ const BookDetailComponent = () => {
         try {
             const response = await getBook(id);
             setBook(response.data);
+            fetchImage(id, response.data.imageUrl);
         } catch (error) {
             console.error("Error fetching book details:", error);
         }
@@ -28,6 +29,17 @@ const BookDetailComponent = () => {
             setReviews(response.data);
         } catch (error) {
             console.error("Error fetching book reviews:", error);
+        }
+    };
+
+    const fetchImage = async (bookId, imageName) => {
+        try {
+            const response = await getImage(imageName);
+            const imageBlob = new Blob([response.data], { type: 'image/jpeg' });
+            const imageUrl = URL.createObjectURL(imageBlob);
+            setImage(imageUrl);
+        } catch (error) {
+            console.error("Error fetching the image:", error);
         }
     };
 
@@ -45,7 +57,12 @@ const BookDetailComponent = () => {
             <p>Description: {book.description}</p>
             <p>Rating: {book.rating}</p>
             <p>Inventory Count: {book.inventoryCount}</p>
-            <img src={`http://localhost:8080/api/images/${encodeURIComponent(book.imageUrl)}`} alt={book.title} />
+
+            {image ? (
+                <img src={image} alt={book.title} style={{ width: '100px', height: '100px' }} />
+            ) : (
+                'Loading Image...'
+            )}
 
             <h3>Reviews</h3>
             {reviews.length > 0 ? (
@@ -61,6 +78,8 @@ const BookDetailComponent = () => {
             ) : (
                 <p>No reviews available for this book.</p>
             )}
+
+            {/*<button onClick={handleBuyClick}>Buy</button>*/}
         </div>
     );
 };

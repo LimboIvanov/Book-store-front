@@ -14,3 +14,7 @@ export const getImage = (imageName) => axios.get(`${IMAGE_API_BASE_URL}/${encode
 export const getBook = (id) => axios.get(`${REST_API_BASE_URL}/${id}`);
 
 export const getReviewsByBookId = (bookId) => axios.get(`http://localhost:8080/api/reviews-by-book/${bookId}`);
+
+export const createOrderItem = (orderItem) => axios.post(`${REST_API_BASE_URL}/order-items`, orderItem);
+
+export const createOrder = (order) => axios.post(`${REST_API_BASE_URL}/orders`, order);
