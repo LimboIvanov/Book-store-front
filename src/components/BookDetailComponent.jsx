@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getBook, getReviewsByBookId, getImage } from '../services/BookService.js';
+import { getBook, getReviewsByBookId, getImage, createReview } from '../services/BookService.js';
 
 const BookDetailComponent = () => {
     const { id } = useParams();
     const [book, setBook] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [image, setImage] = useState(null);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [newReview, setNewReview] = useState({ rating: '', comment: '' });
 
     useEffect(() => {
         fetchBookDetails();
@@ -41,6 +43,33 @@ const BookDetailComponent = () => {
         } catch (error) {
             console.error("Error fetching the image:", error);
         }
+    };
+
+    const handleAddReview = async (e) => {
+        e.preventDefault();
+
+        const review = {
+            rating: newReview.rating,
+            comment: newReview.comment,
+            book: book // Send the full book object
+        };
+
+        try {
+            const response = await createReview(review);
+            setReviews([...reviews, response.data]); // Add new review to existing reviews
+            setShowReviewForm(false); // Hide review form after submission
+            setNewReview({ rating: '', comment: '' }); // Reset the form
+        } catch (error) {
+            console.error("Error adding review:", error);
+        }
+    };
+
+    const handleReviewFormChange = (event) => {
+        const { name, value } = event.target;
+        setNewReview((prevReview) => ({
+            ...prevReview,
+            [name]: value
+        }));
     };
 
     if (!book) {
@@ -79,7 +108,42 @@ const BookDetailComponent = () => {
                 <p>No reviews available for this book.</p>
             )}
 
-            {/*<button onClick={handleBuyClick}>Buy</button>*/}
+            <button onClick={() => setShowReviewForm(true)}>Add Review</button>
+
+            {showReviewForm && (
+                <div>
+                    <form onSubmit={handleAddReview}>
+                        <div>
+                            <label className='form-label'>Comment:</label>
+                            <input
+                                type='text'
+                                placeholder='Write comment here'
+                                name='comment'
+                                value={newReview.comment}
+                                className='form-control'
+                                onChange={handleReviewFormChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label className='form-label'>Rating:</label>
+                            <input
+                                type='number'
+                                placeholder='Write rating here'
+                                name='rating'
+                                value={newReview.rating}
+                                className='form-control'
+                                onChange={handleReviewFormChange}
+                                min="1"
+                                max="10"
+                            />
+                        </div>
+
+                        <button type='submit' className='btn btn-success'>Submit</button>
+                    </form>
+                </div>
+            )}
+
         </div>
     );
 };

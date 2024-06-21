@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const REST_API_BASE_URL = 'http://localhost:8080/api/books';
+const REST_API_BASE_URL_NOT_BOOKS = 'http://localhost:8080/api';
 const IMAGE_API_BASE_URL = 'http://localhost:8080/api/images';
 
 export const listBooks = () => axios.get(REST_API_BASE_URL)
@@ -15,6 +16,8 @@ export const getBook = (id) => axios.get(`${REST_API_BASE_URL}/${id}`);
 
 export const getReviewsByBookId = (bookId) => axios.get(`http://localhost:8080/api/reviews-by-book/${bookId}`);
 
-export const createOrderItem = (orderItem) => axios.post(`${REST_API_BASE_URL}/order-items`, orderItem);
+export const createReview = (review) => axios.post(`http://localhost:8080/api/reviews`, review)
 
-export const createOrder = (order) => axios.post(`${REST_API_BASE_URL}/orders`, order);
+export const createOrderItem = (orderItem) => axios.post(`${REST_API_BASE_URL_NOT_BOOKS}/order-items`, orderItem);
+
+export const createOrder = (order) => axios.post(`${REST_API_BASE_URL_NOT_BOOKS}/orders`, order);
