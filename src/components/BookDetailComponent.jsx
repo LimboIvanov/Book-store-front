@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getBook, getReviewsByBookId, getImage, createReview } from '../services/BookService.js';
+import { useNavigate } from 'react-router-dom';
+import {
+    getBook,
+    getReviewsByBookId,
+    getImage,
+    createReview,
+    createOrderItem,
+    createOrder
+} from '../services/BookService.js';
 
 const BookDetailComponent = () => {
     const { id } = useParams();
@@ -9,6 +17,7 @@ const BookDetailComponent = () => {
     const [image, setImage] = useState(null);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [newReview, setNewReview] = useState({ rating: '', comment: '' });
+    const navigator = useNavigate();
 
     useEffect(() => {
         fetchBookDetails();
@@ -72,6 +81,35 @@ const BookDetailComponent = () => {
         }));
     };
 
+    const navigateToOrder = (orderId) => {
+        navigator(`/orders/${orderId}`);
+    }
+
+    const handleBuy = async () => {
+        try {
+            // Create order
+            const orderResponse = await createOrder({
+                totalPrice: book.price,
+                status: "COMPLETED",
+                orderItems: null
+            });
+            const orderId = orderResponse.data.id;
+
+            // Create order item
+            await createOrderItem({
+                quantity: 1,
+                book: book,
+                price: book.price,
+                orderId: orderId
+            });
+
+            // Redirect to order details page
+            navigateToOrder(orderId);
+        } catch (error) {
+            console.error("Error creating order:", error);
+        }
+    };
+
     if (!book) {
         return <div>Loading...</div>;
     }
@@ -88,7 +126,7 @@ const BookDetailComponent = () => {
             <p>Inventory Count: {book.inventoryCount}</p>
 
             {image ? (
-                <img src={image} alt={book.title} style={{ width: '100px', height: '100px' }} />
+                <img src={image} alt={book.title} style={{width: '100px', height: '100px'}}/>
             ) : (
                 'Loading Image...'
             )}
@@ -101,7 +139,7 @@ const BookDetailComponent = () => {
                         <p>Comment: {review.comment}</p>
                         <p>Created At: {review.createdAt}</p>
                         <p>Created By: {review.createdBy.name}</p>
-                        <hr />
+                        <hr/>
                     </div>
                 ))
             ) : (
@@ -143,6 +181,8 @@ const BookDetailComponent = () => {
                     </form>
                 </div>
             )}
+
+            <button onClick={handleBuy} className='btn btn-primary'>Buy</button>
 
         </div>
     );

@@ -21,3 +21,5 @@ export const createReview = (review) => axios.post(`http://localhost:8080/api/re
 export const createOrderItem = (orderItem) => axios.post(`${REST_API_BASE_URL_NOT_BOOKS}/order-items`, orderItem);
 
 export const createOrder = (order) => axios.post(`${REST_API_BASE_URL_NOT_BOOKS}/orders`, order);
+
+export const getOrderById = (orderId) => axios.get(`${REST_API_BASE_URL_NOT_BOOKS}/orders/${orderId}`);

@@ -8,6 +8,7 @@ import LoginComponent from "./components/LoginComponent.jsx";
 import {setupAxiosInterceptors} from "./services/AxiosInterceptor.js";
 import {useEffect} from "react";
 import RegisterComponent from "./components/RegisterComponent.jsx";
+import OrderDetailComponent from "./components/OrderDetailComponent.jsx";
 
 function App() {
 
@@ -33,6 +34,8 @@ function App() {
                 <Route path='/login' element={<LoginComponent/>}></Route>
                 {/*!// http://localhost:3000/register */}
                 <Route path='/register' element={<RegisterComponent/>}></Route>
+                {/*!// http://localhost:3000/orders/:orderId */}
+                <Route path='/orders/:orderId' element={<OrderDetailComponent />}></Route>
             </Routes>
 
         </BrowserRouter>
